@@ -1,0 +1,1024 @@
+Abdulellah Abualshour
+RUID: 158006704
+Mini Project Queries
+=====================
+
+(1)
+db.reviews.find( { "HotelInfo.Name": "Desert Rose Resort", "_id": ObjectId("5a1d7c469a807fe556269c76") }, {"HotelInfo.Name":1, "Reviews":1} ).pretty()
+
+*output:
+Will be all reviews that contain "Desert Rose Resort" as the Hotel Name. Output too big to show here, but here is the bottom of the results:
+
+[beginning of output here]...
+{
+			"Ratings" : {
+				"Overall" : 5
+			},
+			"AuthorLocation" : "New Jersey",
+			"Title" : "“Great for Families!”",
+			"Author" : "treasuresgirl",
+			"ReviewID" : "UR8380514",
+			"Content" : "The Desert Rose is a perfect choice for families or for anyone who wants the best of both worlds: It's a wholesome, restful environment that's just steps away from the excitement of the Strip. Our room was spacious, well-decorated and had every amenity a family could want during a week's stay. The location is central to everything (we found LV in general to be quite easy to maneuver) and the breakfast was an added value. We would not hesitate to stay there again.",
+			"Date" : ISODate("2007-08-09T04:00:00Z")
+		},
+		{
+			"Ratings" : {
+				"Service" : 5,
+				"Cleanliness" : "5",
+				"Business service (for example, internet access)" : "4",
+				"Check in / front desk" : "4",
+				"Overall" : 5,
+				"Value" : 5,
+				"Rooms" : "5",
+				"Location" : "5"
+			},
+			"AuthorLocation" : "milford, mi",
+			"Title" : "“loved the desert rose !!”",
+			"Author" : "sdjra",
+			"ReviewID" : "UR8361612",
+			"Content" : "we were in las vagas for a dance competition so we had several families from the studio staying at the desert rose and I have to say I was very happy about our choice to stay there. The rooms were very nice -big and spacious and came with everything from coffee pots, and blenders to silverware and hair dryers ...--the house keeping service was very friendly and very good-- It's a perfect place for families --the strip is just a short walk --and the pool area was also very nice -- I will recommend this hotel to everyone I know who plans on a vegas vacation --",
+			"Date" : ISODate("2007-08-06T04:00:00Z")
+		},
+		{
+			"Ratings" : {
+				"Service" : 5,
+				"Cleanliness" : "5",
+				"Business service (for example, internet access)" : "5",
+				"Check in / front desk" : "5",
+				"Overall" : 5,
+				"Value" : 5,
+				"Rooms" : "5",
+				"Location" : "4"
+			},
+			"AuthorLocation" : "Stafford UK",
+			"Title" : "“Great Place To Stay”",
+			"Author" : "UKBloke47",
+			"ReviewID" : "UR8122342",
+			"Content" : "We arrived 2 hours before the official check in time, but were given our room, with a quick check in, without any problem, the staff were friendly and efficient throughout our stay. We had a phone call from the manager 2 hours after arriving to see if everything was alright, but were not bothered again. The room turned out to be spacious, spotlessly clean, with a big TV that had the usual channels, plus pay per view films, the bedroom was a good size, with a big bed, the bathroom was an adequate size, and the kitchen was very well equipped with everything you need, tip, if you have transport and want to purchase food etc, take a right out of the resort on to E Reno Ave, drive the short distance to the Strip, make a left there, and drive south until you come to the Cancun hotel on the right, there is a large Food4Less on the opposite side of the road, with all your needs. The car park, stretches all the way round the resort, with close access to any room, making unloading easy and quick, the electronic room keys are needed to entrance the resort area. As has been said in other reviews, Hooters is the nearest casino, and only a couple of minutes walk, they do great all you can eat ribs for $16. The Tropicano is a little further, as is the MGM, where you can catch the monorail. To catch a bus along the Strip, take a right out of the resort, and right onto Reno, and it's just a short walk to the bus stop at the end of the road. We didn't eat at the complimentary continental breakfast, but the ones who did said it was good, we preferred to have a cooked one in our room. The pool area was not too busy, a good place to cool off. The elevator was quick when called, as there are only 3 floors, so you only spend seconds in there, the housekeeping staff we met on there, were always cheerful and friendly. I have to add, this wasn't our first choice place to stay in Vegas, we had booked a room in a moderate hotel/casino on the strip, but had the Desert Rose resort recommended to us by friends, and booked direct with them via their website, that saved us $70 compared to the price at the other hotel, this is where we will be staying on all our visits to Las Vegas.",
+			"Date" : ISODate("2007-07-15T04:00:00Z")
+		}
+	],
+	"HotelInfo" : {
+		"Name" : "Desert Rose Resort"
+	}
+}
+
+=============================================================================================================
+(2)
+db.reviews.aggregate([
+    {
+        $unwind: "$Reviews"
+    },
+    {
+        $group: {
+            _id: "$HotelInfo.Name",
+            TotalRatings: {$sum: 1}           
+        }
+    },
+    {
+        $sort: {
+            TotalRatings: -1
+        }
+    }
+]
+)
+
+*output:
+{ "_id" : null, "TotalRatings" : 145117 }
+{ "_id" : "Bellagio Las Vegas", "TotalRatings" : 9714 }
+{ "_id" : "MGM Grand Hotel and Casino", "TotalRatings" : 8883 }
+{ "_id" : "Venetian Resort Hotel Casino", "TotalRatings" : 7418 }
+{ "_id" : "Hotel Pennsylvania New York", "TotalRatings" : 6261 }
+{ "_id" : "Planet Hollywood Resort & Casino", "TotalRatings" : 6144 }
+{ "_id" : "The Mirage Hotel & Casino", "TotalRatings" : 5941 }
+{ "_id" : "Treasure Island - TI Hotel & Casino", "TotalRatings" : 5940 }
+{ "_id" : "Wynn Las Vegas", "TotalRatings" : 5580 }
+{ "_id" : "Signature at MGM Grand", "TotalRatings" : 5536 }
+{ "_id" : "Excalibur Hotel & Casino", "TotalRatings" : 5532 }
+{ "_id" : "Floridays Resort Orlando", "TotalRatings" : 5268 }
+{ "_id" : "Monte Carlo Resort & Casino", "TotalRatings" : 5261 }
+{ "_id" : "Paris Las Vegas", "TotalRatings" : 5209 }
+{ "_id" : "ARIA Resort & Casino", "TotalRatings" : 5114 }
+{ "_id" : "Hudson New York", "TotalRatings" : 5076 }
+{ "_id" : "Sheraton New York Hotel", "TotalRatings" : 5034 }
+{ "_id" : "W New York - Times Square", "TotalRatings" : 4980 }
+{ "_id" : "Mandalay Bay Resort & Casino", "TotalRatings" : 4613 }
+{ "_id" : "Park Central", "TotalRatings" : 4539 }
+{ "_id" : "Hard Rock Hotel at Universal Orlando", "TotalRatings" : 4298 }
+{ "_id" : "Caesars Palace", "TotalRatings" : 4260 }
+{ "_id" : "The Roosevelt Hotel", "TotalRatings" : 4203 }
+{ "_id" : "New York - New York Hotel and Casino", "TotalRatings" : 4114 }
+{ "_id" : "Bally's Las Vegas", "TotalRatings" : 4056 }
+{ "_id" : "Golden Nugget", "TotalRatings" : 4000 }
+{ "_id" : "Lake Buena Vista Resort Village & Spa", "TotalRatings" : 3921 }
+{ "_id" : "Edison Hotel Times Square", "TotalRatings" : 3885 }
+{ "_id" : "The Palazzo Resort Hotel Casino", "TotalRatings" : 3794 }
+{ "_id" : "Wellington Hotel", "TotalRatings" : 3761 }
+{ "_id" : "Tropicana Las Vegas", "TotalRatings" : 3747 }
+{ "_id" : "The Orleans Hotel & Casino", "TotalRatings" : 3629 }
+{ "_id" : "Circus Circus Hotel & Casino Las Vegas", "TotalRatings" : 3490 }
+{ "_id" : "The Waldorf Astoria", "TotalRatings" : 3343 }
+{ "_id" : "Disney's Port Orleans Resort - Riverside", "TotalRatings" : 3310 }
+{ "_id" : "Broadway at Times Square Hotel", "TotalRatings" : 3254 }
+{ "_id" : "Encore At Wynn Las Vegas", "TotalRatings" : 3231 }
+{ "_id" : "The Florida Hotel and Conference Center", "TotalRatings" : 3190 }
+{ "_id" : "Stratosphere Hotel, Casino and Tower", "TotalRatings" : 3134 }
+{ "_id" : "The Cosmopolitan of Las Vegas", "TotalRatings" : 3068 }
+... //etc
+
+==============================================================================================================
+(3)
+db.reviews.aggregate([
+    {
+        $unwind: "$Reviews"
+    },
+    {
+        $group: {
+            _id: "$HotelInfo.Name",
+            AvgOverall: {$avg: "$Reviews.Ratings.Overall"}           
+        }
+    },
+    {
+        $sort: {
+            AvgOverall: -1
+        }
+    }
+]
+)
+
+*output:
+{ "_id" : "Hotel Aquino", "AvgOverall" : 5 }
+{ "_id" : "Hostal Rio de Castro", "AvgOverall" : 5 }
+{ "_id" : "Residenza Grandi Vedute", "AvgOverall" : 5 }
+{ "_id" : "Conte House I", "AvgOverall" : 5 }
+{ "_id" : "The Mansion at MGM Grand", "AvgOverall" : 5 }
+{ "_id" : "Eterna Roma", "AvgOverall" : 5 }
+{ "_id" : "Residence Inn Indianapolis Fishers", "AvgOverall" : 5 }
+{ "_id" : "Centro Pellegrini", "AvgOverall" : 5 }
+{ "_id" : "Hotel Igel", "AvgOverall" : 5 }
+{ "_id" : "Hotel Konfidentiel", "AvgOverall" : 5 }
+{ "_id" : "Petit Prince", "AvgOverall" : 5 }
+{ "_id" : "La Piazzetta di Roma", "AvgOverall" : 5 }
+{ "_id" : "Freestanza Accommodation", "AvgOverall" : 5 }
+{ "_id" : "Central Park Suite", "AvgOverall" : 5 }
+{ "_id" : "Marini Park Hotel", "AvgOverall" : 5 }
+{ "_id" : "Residenza Ca Felice", "AvgOverall" : 5 }
+{ "_id" : "Inn at The Black Olive", "AvgOverall" : 4.948275862068965 }
+{ "_id" : "Deko Rome", "AvgOverall" : 4.946902654867257 }
+{ "_id" : "The Mahana at Kaanapali resort", "AvgOverall" : 4.9411764705882355 }
+{ "_id" : "Hotel Le Isole", "AvgOverall" : 4.9375 }
+{ "_id" : "Royal Holiday Beach Motel", "AvgOverall" : 4.933333333333334 }
+{ "_id" : "Hotel Champs Elysees Mac Mahon", "AvgOverall" : 4.916666666666667 }
+{ "_id" : "Villa Spalletti Trivelli", "AvgOverall" : 4.912621359223301 }
+{ "_id" : "Neorion Hotel", "AvgOverall" : 4.911111111111111 }
+{ "_id" : "Waldorf Astoria Chicago", "AvgOverall" : 4.902234636871508 }
+{ "_id" : "Witt Istanbul Suites", "AvgOverall" : 4.901140684410646 }
+{ "_id" : "Oltre Il Giardino", "AvgOverall" : 4.898305084745763 }
+{ "_id" : "Jays Paris", "AvgOverall" : 4.898034398034398 }
+{ "_id" : "Best Western PREMIER Acropol Suites & Spa", "AvgOverall" : 4.8979591836734695 }
+{ "_id" : "Aura Suites", "AvgOverall" : 4.888888888888889 }
+{ "_id" : "Rosewood Hotel Georgia", "AvgOverall" : 4.888888888888889 }
+{ "_id" : "Al Ponte Antico Hotel", "AvgOverall" : 4.886904761904762 }
+{ "_id" : "Millennium Suites", "AvgOverall" : 4.886363636363637 }
+{ "_id" : "Portrait Suites", "AvgOverall" : 4.880434782608695 }
+{ "_id" : "Hotel Amira Istanbul", "AvgOverall" : 4.876681614349776 }
+{ "_id" : "Hotel Beaux Arts", "AvgOverall" : 4.875 }
+{ "_id" : "Majestic Residence", "AvgOverall" : 4.875 }
+{ "_id" : "iRooms Spanish Steps", "AvgOverall" : 4.875 }
+{ "_id" : "Best Windows", "AvgOverall" : 4.875 }
+{ "_id" : "The Forest by Wangz", "AvgOverall" : 4.875 }
+... //etc
+==============================================================================================================
+(4)
+db.reviews.aggregate([
+    {
+        $unwind: "$Reviews"
+    },
+    {
+        $match: {
+            "Reviews.Ratings.Overall": 5.0
+        }
+    },   
+    {
+        $group: {
+            _id: "$HotelInfo.Name",
+            NumberOfFiveOveralls: {$sum: 1}           
+        }
+    },
+    {
+        $sort: {
+            NumberOfFiveOveralls: -1
+        }
+    }
+]
+)
+
+*output:
+{ "_id" : null, "NumberOfFiveOveralls" : 59923 }
+{ "_id" : "Bellagio Las Vegas", "NumberOfFiveOveralls" : 5486 }
+{ "_id" : "Venetian Resort Hotel Casino", "NumberOfFiveOveralls" : 3916 }
+{ "_id" : "Signature at MGM Grand", "NumberOfFiveOveralls" : 3742 }
+{ "_id" : "Floridays Resort Orlando", "NumberOfFiveOveralls" : 3742 }
+{ "_id" : "Wynn Las Vegas", "NumberOfFiveOveralls" : 3370 }
+{ "_id" : "MGM Grand Hotel and Casino", "NumberOfFiveOveralls" : 2670 }
+{ "_id" : "ARIA Resort & Casino", "NumberOfFiveOveralls" : 2440 }
+{ "_id" : "Lake Buena Vista Resort Village & Spa", "NumberOfFiveOveralls" : 2325 }
+{ "_id" : "The Royal Playa del Carmen", "NumberOfFiveOveralls" : 2319 }
+{ "_id" : "The Mirage Hotel & Casino", "NumberOfFiveOveralls" : 2260 }
+{ "_id" : "The Palazzo Resort Hotel Casino", "NumberOfFiveOveralls" : 2207 }
+{ "_id" : "W New York - Times Square", "NumberOfFiveOveralls" : 2193 }
+{ "_id" : "Hard Rock Hotel at Universal Orlando", "NumberOfFiveOveralls" : 2169 }
+{ "_id" : "The Florida Hotel and Conference Center", "NumberOfFiveOveralls" : 2168 }
+{ "_id" : "Encore At Wynn Las Vegas", "NumberOfFiveOveralls" : 2117 }
+{ "_id" : "Sofitel New York", "NumberOfFiveOveralls" : 2054 }
+{ "_id" : "Desert Rose Resort", "NumberOfFiveOveralls" : 1963 }
+{ "_id" : "Tropicana Las Vegas", "NumberOfFiveOveralls" : 1923 }
+{ "_id" : "Eventi - a Kimpton Hotel", "NumberOfFiveOveralls" : 1901 }
+{ "_id" : "Secrets Maroma Beach Riviera Cancun", "NumberOfFiveOveralls" : 1863 }
+{ "_id" : "Radisson Hotel Orlando - Lake Buena Vista", "NumberOfFiveOveralls" : 1838 }
+{ "_id" : "Chancellor Hotel on Union Square", "NumberOfFiveOveralls" : 1816 }
+{ "_id" : "Caesars Palace", "NumberOfFiveOveralls" : 1749 }
+{ "_id" : "The Orleans Hotel & Casino", "NumberOfFiveOveralls" : 1748 }
+{ "_id" : "Treasure Island - TI Hotel & Casino", "NumberOfFiveOveralls" : 1742 }
+{ "_id" : "Disney's Animal Kingdom Lodge", "NumberOfFiveOveralls" : 1688 }
+{ "_id" : "Radisson Edwardian Bloomsbury Street", "NumberOfFiveOveralls" : 1678 }
+{ "_id" : "Planet Hollywood Resort & Casino", "NumberOfFiveOveralls" : 1675 }
+{ "_id" : "Paris Las Vegas", "NumberOfFiveOveralls" : 1675 }
+{ "_id" : "Hotel Ares Eiffel", "NumberOfFiveOveralls" : 1655 }
+{ "_id" : "Broadway at Times Square Hotel", "NumberOfFiveOveralls" : 1546 }
+{ "_id" : "Hilton Grand Vacations Suites on International Drive", "NumberOfFiveOveralls" : 1530 }
+{ "_id" : "Valentin Imperial Maya", "NumberOfFiveOveralls" : 1530 }
+{ "_id" : "Platinum Hotel and Spa", "NumberOfFiveOveralls" : 1530 }
+{ "_id" : "Golden Nugget", "NumberOfFiveOveralls" : 1505 }
+{ "_id" : "The Point Orlando Resort", "NumberOfFiveOveralls" : 1486 }
+{ "_id" : "The Cosmopolitan of Las Vegas", "NumberOfFiveOveralls" : 1472 }
+{ "_id" : "Four Seasons Hotel Las Vegas", "NumberOfFiveOveralls" : 1457 }
+{ "_id" : "THEhotel at Mandalay Bay", "NumberOfFiveOveralls" : 1447 }
+... //etc
+==============================================================================================================
+(5)
+db.reviews.aggregate([
+    {
+        $unwind: "$Reviews"
+    }, 
+    {
+        $group: {
+            _id: { month: { $month: "$Reviews.Date" }, day: {$dayOfMonth: "$Reviews.Date"} },
+            NumberOfReviews: {$sum: 1}           
+        }
+    },
+    {
+        $sort: {
+            _id: 1
+        }
+    }
+]
+)
+
+*output:
+{ "_id" : { "month" : 1, "day" : 1 }, "NumberOfReviews" : 4422 }
+{ "_id" : { "month" : 1, "day" : 2 }, "NumberOfReviews" : 5606 }
+{ "_id" : { "month" : 1, "day" : 3 }, "NumberOfReviews" : 5903 }
+{ "_id" : { "month" : 1, "day" : 4 }, "NumberOfReviews" : 5761 }
+{ "_id" : { "month" : 1, "day" : 5 }, "NumberOfReviews" : 6581 }
+{ "_id" : { "month" : 1, "day" : 6 }, "NumberOfReviews" : 5214 }
+{ "_id" : { "month" : 1, "day" : 7 }, "NumberOfReviews" : 4710 }
+{ "_id" : { "month" : 1, "day" : 8 }, "NumberOfReviews" : 4834 }
+{ "_id" : { "month" : 1, "day" : 9 }, "NumberOfReviews" : 4489 }
+{ "_id" : { "month" : 1, "day" : 10 }, "NumberOfReviews" : 4345 }
+{ "_id" : { "month" : 1, "day" : 11 }, "NumberOfReviews" : 4216 }
+{ "_id" : { "month" : 1, "day" : 12 }, "NumberOfReviews" : 4335 }
+{ "_id" : { "month" : 1, "day" : 13 }, "NumberOfReviews" : 3936 }
+{ "_id" : { "month" : 1, "day" : 14 }, "NumberOfReviews" : 3904 }
+{ "_id" : { "month" : 1, "day" : 15 }, "NumberOfReviews" : 3952 }
+{ "_id" : { "month" : 1, "day" : 16 }, "NumberOfReviews" : 4188 }
+{ "_id" : { "month" : 1, "day" : 17 }, "NumberOfReviews" : 4482 }
+{ "_id" : { "month" : 1, "day" : 18 }, "NumberOfReviews" : 4251 }
+{ "_id" : { "month" : 1, "day" : 19 }, "NumberOfReviews" : 4833 }
+{ "_id" : { "month" : 1, "day" : 20 }, "NumberOfReviews" : 4344 }
+{ "_id" : { "month" : 1, "day" : 21 }, "NumberOfReviews" : 4162 }
+{ "_id" : { "month" : 1, "day" : 22 }, "NumberOfReviews" : 4126 }
+{ "_id" : { "month" : 1, "day" : 23 }, "NumberOfReviews" : 4283 }
+{ "_id" : { "month" : 1, "day" : 24 }, "NumberOfReviews" : 4187 }
+{ "_id" : { "month" : 1, "day" : 25 }, "NumberOfReviews" : 4135 }
+{ "_id" : { "month" : 1, "day" : 26 }, "NumberOfReviews" : 4168 }
+{ "_id" : { "month" : 1, "day" : 27 }, "NumberOfReviews" : 4007 }
+{ "_id" : { "month" : 1, "day" : 28 }, "NumberOfReviews" : 3770 }
+{ "_id" : { "month" : 1, "day" : 29 }, "NumberOfReviews" : 4111 }
+{ "_id" : { "month" : 1, "day" : 30 }, "NumberOfReviews" : 5426 }
+{ "_id" : { "month" : 1, "day" : 31 }, "NumberOfReviews" : 4365 }
+{ "_id" : { "month" : 2, "day" : 1 }, "NumberOfReviews" : 4027 }
+{ "_id" : { "month" : 2, "day" : 2 }, "NumberOfReviews" : 3926 }
+{ "_id" : { "month" : 2, "day" : 3 }, "NumberOfReviews" : 3604 }
+{ "_id" : { "month" : 2, "day" : 4 }, "NumberOfReviews" : 3468 }
+{ "_id" : { "month" : 2, "day" : 5 }, "NumberOfReviews" : 3526 }
+{ "_id" : { "month" : 2, "day" : 6 }, "NumberOfReviews" : 3660 }
+{ "_id" : { "month" : 2, "day" : 7 }, "NumberOfReviews" : 3941 }
+{ "_id" : { "month" : 2, "day" : 8 }, "NumberOfReviews" : 4157 }
+{ "_id" : { "month" : 2, "day" : 9 }, "NumberOfReviews" : 4014 }
+{ "_id" : { "month" : 2, "day" : 10 }, "NumberOfReviews" : 3619 }
+{ "_id" : { "month" : 2, "day" : 11 }, "NumberOfReviews" : 3669 }
+{ "_id" : { "month" : 2, "day" : 12 }, "NumberOfReviews" : 3859 }
+{ "_id" : { "month" : 2, "day" : 13 }, "NumberOfReviews" : 3923 }
+{ "_id" : { "month" : 2, "day" : 14 }, "NumberOfReviews" : 3934 }
+{ "_id" : { "month" : 2, "day" : 15 }, "NumberOfReviews" : 4259 }
+{ "_id" : { "month" : 2, "day" : 16 }, "NumberOfReviews" : 4669 }
+{ "_id" : { "month" : 2, "day" : 17 }, "NumberOfReviews" : 4339 }
+{ "_id" : { "month" : 2, "day" : 18 }, "NumberOfReviews" : 4434 }
+{ "_id" : { "month" : 2, "day" : 19 }, "NumberOfReviews" : 4750 }
+{ "_id" : { "month" : 2, "day" : 20 }, "NumberOfReviews" : 6283 }
+{ "_id" : { "month" : 2, "day" : 21 }, "NumberOfReviews" : 5577 }
+{ "_id" : { "month" : 2, "day" : 22 }, "NumberOfReviews" : 5065 }
+{ "_id" : { "month" : 2, "day" : 23 }, "NumberOfReviews" : 4743 }
+{ "_id" : { "month" : 2, "day" : 24 }, "NumberOfReviews" : 4845 }
+{ "_id" : { "month" : 2, "day" : 25 }, "NumberOfReviews" : 4798 }
+{ "_id" : { "month" : 2, "day" : 26 }, "NumberOfReviews" : 4853 }
+{ "_id" : { "month" : 2, "day" : 27 }, "NumberOfReviews" : 5192 }
+{ "_id" : { "month" : 2, "day" : 28 }, "NumberOfReviews" : 5072 }
+{ "_id" : { "month" : 2, "day" : 29 }, "NumberOfReviews" : 2025 }
+{ "_id" : { "month" : 3, "day" : 1 }, "NumberOfReviews" : 4853 }
+{ "_id" : { "month" : 3, "day" : 2 }, "NumberOfReviews" : 4714 }
+{ "_id" : { "month" : 3, "day" : 3 }, "NumberOfReviews" : 4581 }
+{ "_id" : { "month" : 3, "day" : 4 }, "NumberOfReviews" : 4533 }
+{ "_id" : { "month" : 3, "day" : 5 }, "NumberOfReviews" : 4537 }
+{ "_id" : { "month" : 3, "day" : 6 }, "NumberOfReviews" : 4272 }
+{ "_id" : { "month" : 3, "day" : 7 }, "NumberOfReviews" : 4442 }
+{ "_id" : { "month" : 3, "day" : 8 }, "NumberOfReviews" : 4773 }
+{ "_id" : { "month" : 3, "day" : 9 }, "NumberOfReviews" : 4277 }
+{ "_id" : { "month" : 3, "day" : 10 }, "NumberOfReviews" : 4162 }
+{ "_id" : { "month" : 3, "day" : 11 }, "NumberOfReviews" : 4282 }
+{ "_id" : { "month" : 3, "day" : 12 }, "NumberOfReviews" : 4554 }
+{ "_id" : { "month" : 3, "day" : 13 }, "NumberOfReviews" : 4509 }
+{ "_id" : { "month" : 3, "day" : 14 }, "NumberOfReviews" : 4514 }
+{ "_id" : { "month" : 3, "day" : 15 }, "NumberOfReviews" : 4357 }
+{ "_id" : { "month" : 3, "day" : 16 }, "NumberOfReviews" : 4819 }
+{ "_id" : { "month" : 3, "day" : 17 }, "NumberOfReviews" : 4919 }
+{ "_id" : { "month" : 3, "day" : 18 }, "NumberOfReviews" : 4815 }
+{ "_id" : { "month" : 3, "day" : 19 }, "NumberOfReviews" : 5014 }
+{ "_id" : { "month" : 3, "day" : 20 }, "NumberOfReviews" : 4997 }
+{ "_id" : { "month" : 3, "day" : 21 }, "NumberOfReviews" : 5101 }
+{ "_id" : { "month" : 3, "day" : 22 }, "NumberOfReviews" : 5202 }
+{ "_id" : { "month" : 3, "day" : 23 }, "NumberOfReviews" : 4880 }
+{ "_id" : { "month" : 3, "day" : 24 }, "NumberOfReviews" : 4741 }
+{ "_id" : { "month" : 3, "day" : 25 }, "NumberOfReviews" : 4689 }
+{ "_id" : { "month" : 3, "day" : 26 }, "NumberOfReviews" : 4705 }
+{ "_id" : { "month" : 3, "day" : 27 }, "NumberOfReviews" : 6045 }
+{ "_id" : { "month" : 3, "day" : 28 }, "NumberOfReviews" : 5860 }
+{ "_id" : { "month" : 3, "day" : 29 }, "NumberOfReviews" : 5504 }
+{ "_id" : { "month" : 3, "day" : 30 }, "NumberOfReviews" : 5041 }
+{ "_id" : { "month" : 3, "day" : 31 }, "NumberOfReviews" : 4665 }
+{ "_id" : { "month" : 4, "day" : 1 }, "NumberOfReviews" : 4446 }
+{ "_id" : { "month" : 4, "day" : 2 }, "NumberOfReviews" : 4352 }
+{ "_id" : { "month" : 4, "day" : 3 }, "NumberOfReviews" : 4233 }
+{ "_id" : { "month" : 4, "day" : 4 }, "NumberOfReviews" : 4429 }
+{ "_id" : { "month" : 4, "day" : 5 }, "NumberOfReviews" : 5075 }
+{ "_id" : { "month" : 4, "day" : 6 }, "NumberOfReviews" : 4603 }
+{ "_id" : { "month" : 4, "day" : 7 }, "NumberOfReviews" : 4454 }
+{ "_id" : { "month" : 4, "day" : 8 }, "NumberOfReviews" : 4322 }
+{ "_id" : { "month" : 4, "day" : 9 }, "NumberOfReviews" : 4470 }
+{ "_id" : { "month" : 4, "day" : 10 }, "NumberOfReviews" : 4456 }
+{ "_id" : { "month" : 4, "day" : 11 }, "NumberOfReviews" : 4726 }
+{ "_id" : { "month" : 4, "day" : 12 }, "NumberOfReviews" : 5016 }
+{ "_id" : { "month" : 4, "day" : 13 }, "NumberOfReviews" : 4620 }
+{ "_id" : { "month" : 4, "day" : 14 }, "NumberOfReviews" : 4452 }
+{ "_id" : { "month" : 4, "day" : 15 }, "NumberOfReviews" : 4156 }
+{ "_id" : { "month" : 4, "day" : 16 }, "NumberOfReviews" : 4237 }
+{ "_id" : { "month" : 4, "day" : 17 }, "NumberOfReviews" : 4522 }
+{ "_id" : { "month" : 4, "day" : 18 }, "NumberOfReviews" : 4463 }
+{ "_id" : { "month" : 4, "day" : 19 }, "NumberOfReviews" : 4538 }
+{ "_id" : { "month" : 4, "day" : 20 }, "NumberOfReviews" : 4442 }
+{ "_id" : { "month" : 4, "day" : 21 }, "NumberOfReviews" : 4362 }
+{ "_id" : { "month" : 4, "day" : 22 }, "NumberOfReviews" : 4539 }
+{ "_id" : { "month" : 4, "day" : 23 }, "NumberOfReviews" : 5432 }
+{ "_id" : { "month" : 4, "day" : 24 }, "NumberOfReviews" : 4147 }
+{ "_id" : { "month" : 4, "day" : 25 }, "NumberOfReviews" : 3997 }
+{ "_id" : { "month" : 4, "day" : 26 }, "NumberOfReviews" : 4168 }
+{ "_id" : { "month" : 4, "day" : 27 }, "NumberOfReviews" : 4040 }
+{ "_id" : { "month" : 4, "day" : 28 }, "NumberOfReviews" : 3809 }
+{ "_id" : { "month" : 4, "day" : 29 }, "NumberOfReviews" : 3982 }
+{ "_id" : { "month" : 4, "day" : 30 }, "NumberOfReviews" : 3779 }
+{ "_id" : { "month" : 5, "day" : 1 }, "NumberOfReviews" : 3640 }
+{ "_id" : { "month" : 5, "day" : 2 }, "NumberOfReviews" : 3734 }
+{ "_id" : { "month" : 5, "day" : 3 }, "NumberOfReviews" : 3889 }
+{ "_id" : { "month" : 5, "day" : 4 }, "NumberOfReviews" : 3932 }
+{ "_id" : { "month" : 5, "day" : 5 }, "NumberOfReviews" : 3471 }
+{ "_id" : { "month" : 5, "day" : 6 }, "NumberOfReviews" : 3195 }
+{ "_id" : { "month" : 5, "day" : 7 }, "NumberOfReviews" : 3086 }
+{ "_id" : { "month" : 5, "day" : 8 }, "NumberOfReviews" : 3255 }
+{ "_id" : { "month" : 5, "day" : 9 }, "NumberOfReviews" : 3500 }
+{ "_id" : { "month" : 5, "day" : 10 }, "NumberOfReviews" : 3632 }
+{ "_id" : { "month" : 5, "day" : 11 }, "NumberOfReviews" : 3433 }
+{ "_id" : { "month" : 5, "day" : 12 }, "NumberOfReviews" : 3668 }
+{ "_id" : { "month" : 5, "day" : 13 }, "NumberOfReviews" : 3353 }
+{ "_id" : { "month" : 5, "day" : 14 }, "NumberOfReviews" : 3235 }
+{ "_id" : { "month" : 5, "day" : 15 }, "NumberOfReviews" : 3545 }
+{ "_id" : { "month" : 5, "day" : 16 }, "NumberOfReviews" : 3828 }
+{ "_id" : { "month" : 5, "day" : 17 }, "NumberOfReviews" : 3601 }
+{ "_id" : { "month" : 5, "day" : 18 }, "NumberOfReviews" : 3915 }
+{ "_id" : { "month" : 5, "day" : 19 }, "NumberOfReviews" : 3698 }
+{ "_id" : { "month" : 5, "day" : 20 }, "NumberOfReviews" : 3527 }
+{ "_id" : { "month" : 5, "day" : 21 }, "NumberOfReviews" : 3719 }
+{ "_id" : { "month" : 5, "day" : 22 }, "NumberOfReviews" : 3511 }
+{ "_id" : { "month" : 5, "day" : 23 }, "NumberOfReviews" : 3793 }
+{ "_id" : { "month" : 5, "day" : 24 }, "NumberOfReviews" : 4006 }
+{ "_id" : { "month" : 5, "day" : 25 }, "NumberOfReviews" : 3793 }
+{ "_id" : { "month" : 5, "day" : 26 }, "NumberOfReviews" : 3921 }
+{ "_id" : { "month" : 5, "day" : 27 }, "NumberOfReviews" : 3914 }
+{ "_id" : { "month" : 5, "day" : 28 }, "NumberOfReviews" : 3806 }
+{ "_id" : { "month" : 5, "day" : 29 }, "NumberOfReviews" : 3906 }
+{ "_id" : { "month" : 5, "day" : 30 }, "NumberOfReviews" : 4012 }
+{ "_id" : { "month" : 5, "day" : 31 }, "NumberOfReviews" : 4482 }
+{ "_id" : { "month" : 6, "day" : 1 }, "NumberOfReviews" : 4764 }
+{ "_id" : { "month" : 6, "day" : 2 }, "NumberOfReviews" : 4282 }
+{ "_id" : { "month" : 6, "day" : 3 }, "NumberOfReviews" : 4302 }
+{ "_id" : { "month" : 6, "day" : 4 }, "NumberOfReviews" : 3880 }
+{ "_id" : { "month" : 6, "day" : 5 }, "NumberOfReviews" : 3788 }
+{ "_id" : { "month" : 6, "day" : 6 }, "NumberOfReviews" : 4150 }
+{ "_id" : { "month" : 6, "day" : 7 }, "NumberOfReviews" : 4143 }
+{ "_id" : { "month" : 6, "day" : 8 }, "NumberOfReviews" : 4489 }
+{ "_id" : { "month" : 6, "day" : 9 }, "NumberOfReviews" : 4124 }
+{ "_id" : { "month" : 6, "day" : 10 }, "NumberOfReviews" : 3692 }
+{ "_id" : { "month" : 6, "day" : 11 }, "NumberOfReviews" : 3502 }
+{ "_id" : { "month" : 6, "day" : 12 }, "NumberOfReviews" : 3909 }
+{ "_id" : { "month" : 6, "day" : 13 }, "NumberOfReviews" : 7184 }
+{ "_id" : { "month" : 6, "day" : 14 }, "NumberOfReviews" : 4734 }
+{ "_id" : { "month" : 6, "day" : 15 }, "NumberOfReviews" : 4464 }
+{ "_id" : { "month" : 6, "day" : 16 }, "NumberOfReviews" : 4248 }
+{ "_id" : { "month" : 6, "day" : 17 }, "NumberOfReviews" : 4028 }
+{ "_id" : { "month" : 6, "day" : 18 }, "NumberOfReviews" : 4120 }
+{ "_id" : { "month" : 6, "day" : 19 }, "NumberOfReviews" : 3806 }
+{ "_id" : { "month" : 6, "day" : 20 }, "NumberOfReviews" : 4175 }
+{ "_id" : { "month" : 6, "day" : 21 }, "NumberOfReviews" : 4497 }
+{ "_id" : { "month" : 6, "day" : 22 }, "NumberOfReviews" : 4274 }
+{ "_id" : { "month" : 6, "day" : 23 }, "NumberOfReviews" : 4405 }
+{ "_id" : { "month" : 6, "day" : 24 }, "NumberOfReviews" : 3890 }
+{ "_id" : { "month" : 6, "day" : 25 }, "NumberOfReviews" : 4217 }
+{ "_id" : { "month" : 6, "day" : 26 }, "NumberOfReviews" : 3945 }
+{ "_id" : { "month" : 6, "day" : 27 }, "NumberOfReviews" : 4339 }
+{ "_id" : { "month" : 6, "day" : 28 }, "NumberOfReviews" : 4405 }
+{ "_id" : { "month" : 6, "day" : 29 }, "NumberOfReviews" : 4330 }
+{ "_id" : { "month" : 6, "day" : 30 }, "NumberOfReviews" : 4305 }
+{ "_id" : { "month" : 7, "day" : 1 }, "NumberOfReviews" : 3862 }
+{ "_id" : { "month" : 7, "day" : 2 }, "NumberOfReviews" : 3849 }
+{ "_id" : { "month" : 7, "day" : 3 }, "NumberOfReviews" : 3804 }
+{ "_id" : { "month" : 7, "day" : 4 }, "NumberOfReviews" : 3934 }
+{ "_id" : { "month" : 7, "day" : 5 }, "NumberOfReviews" : 4871 }
+{ "_id" : { "month" : 7, "day" : 6 }, "NumberOfReviews" : 5258 }
+{ "_id" : { "month" : 7, "day" : 7 }, "NumberOfReviews" : 4946 }
+{ "_id" : { "month" : 7, "day" : 8 }, "NumberOfReviews" : 4630 }
+{ "_id" : { "month" : 7, "day" : 9 }, "NumberOfReviews" : 4211 }
+{ "_id" : { "month" : 7, "day" : 10 }, "NumberOfReviews" : 4464 }
+{ "_id" : { "month" : 7, "day" : 11 }, "NumberOfReviews" : 4567 }
+{ "_id" : { "month" : 7, "day" : 12 }, "NumberOfReviews" : 4790 }
+{ "_id" : { "month" : 7, "day" : 13 }, "NumberOfReviews" : 4596 }
+{ "_id" : { "month" : 7, "day" : 14 }, "NumberOfReviews" : 4593 }
+{ "_id" : { "month" : 7, "day" : 15 }, "NumberOfReviews" : 4243 }
+{ "_id" : { "month" : 7, "day" : 16 }, "NumberOfReviews" : 4134 }
+{ "_id" : { "month" : 7, "day" : 17 }, "NumberOfReviews" : 4450 }
+{ "_id" : { "month" : 7, "day" : 18 }, "NumberOfReviews" : 4697 }
+{ "_id" : { "month" : 7, "day" : 19 }, "NumberOfReviews" : 5043 }
+{ "_id" : { "month" : 7, "day" : 20 }, "NumberOfReviews" : 5249 }
+{ "_id" : { "month" : 7, "day" : 21 }, "NumberOfReviews" : 4900 }
+{ "_id" : { "month" : 7, "day" : 22 }, "NumberOfReviews" : 4636 }
+{ "_id" : { "month" : 7, "day" : 23 }, "NumberOfReviews" : 4546 }
+{ "_id" : { "month" : 7, "day" : 24 }, "NumberOfReviews" : 4461 }
+{ "_id" : { "month" : 7, "day" : 25 }, "NumberOfReviews" : 5054 }
+{ "_id" : { "month" : 7, "day" : 26 }, "NumberOfReviews" : 4905 }
+{ "_id" : { "month" : 7, "day" : 27 }, "NumberOfReviews" : 6625 }
+{ "_id" : { "month" : 7, "day" : 28 }, "NumberOfReviews" : 7981 }
+{ "_id" : { "month" : 7, "day" : 29 }, "NumberOfReviews" : 6890 }
+{ "_id" : { "month" : 7, "day" : 30 }, "NumberOfReviews" : 4971 }
+{ "_id" : { "month" : 7, "day" : 31 }, "NumberOfReviews" : 4797 }
+{ "_id" : { "month" : 8, "day" : 1 }, "NumberOfReviews" : 5073 }
+{ "_id" : { "month" : 8, "day" : 2 }, "NumberOfReviews" : 5038 }
+{ "_id" : { "month" : 8, "day" : 3 }, "NumberOfReviews" : 5012 }
+{ "_id" : { "month" : 8, "day" : 4 }, "NumberOfReviews" : 5714 }
+{ "_id" : { "month" : 8, "day" : 5 }, "NumberOfReviews" : 4838 }
+{ "_id" : { "month" : 8, "day" : 6 }, "NumberOfReviews" : 4429 }
+{ "_id" : { "month" : 8, "day" : 7 }, "NumberOfReviews" : 4643 }
+{ "_id" : { "month" : 8, "day" : 8 }, "NumberOfReviews" : 4987 }
+{ "_id" : { "month" : 8, "day" : 9 }, "NumberOfReviews" : 4841 }
+{ "_id" : { "month" : 8, "day" : 10 }, "NumberOfReviews" : 5073 }
+{ "_id" : { "month" : 8, "day" : 11 }, "NumberOfReviews" : 5554 }
+{ "_id" : { "month" : 8, "day" : 12 }, "NumberOfReviews" : 5221 }
+{ "_id" : { "month" : 8, "day" : 13 }, "NumberOfReviews" : 4618 }
+{ "_id" : { "month" : 8, "day" : 14 }, "NumberOfReviews" : 4589 }
+{ "_id" : { "month" : 8, "day" : 15 }, "NumberOfReviews" : 5065 }
+{ "_id" : { "month" : 8, "day" : 16 }, "NumberOfReviews" : 4988 }
+{ "_id" : { "month" : 8, "day" : 17 }, "NumberOfReviews" : 4794 }
+{ "_id" : { "month" : 8, "day" : 18 }, "NumberOfReviews" : 4760 }
+{ "_id" : { "month" : 8, "day" : 19 }, "NumberOfReviews" : 5056 }
+{ "_id" : { "month" : 8, "day" : 20 }, "NumberOfReviews" : 4662 }
+{ "_id" : { "month" : 8, "day" : 21 }, "NumberOfReviews" : 4795 }
+{ "_id" : { "month" : 8, "day" : 22 }, "NumberOfReviews" : 4973 }
+{ "_id" : { "month" : 8, "day" : 23 }, "NumberOfReviews" : 5061 }
+{ "_id" : { "month" : 8, "day" : 24 }, "NumberOfReviews" : 5368 }
+{ "_id" : { "month" : 8, "day" : 25 }, "NumberOfReviews" : 5675 }
+{ "_id" : { "month" : 8, "day" : 26 }, "NumberOfReviews" : 4807 }
+{ "_id" : { "month" : 8, "day" : 27 }, "NumberOfReviews" : 4619 }
+{ "_id" : { "month" : 8, "day" : 28 }, "NumberOfReviews" : 4513 }
+{ "_id" : { "month" : 8, "day" : 29 }, "NumberOfReviews" : 4643 }
+{ "_id" : { "month" : 8, "day" : 30 }, "NumberOfReviews" : 4600 }
+{ "_id" : { "month" : 8, "day" : 31 }, "NumberOfReviews" : 4868 }
+{ "_id" : { "month" : 9, "day" : 1 }, "NumberOfReviews" : 5336 }
+{ "_id" : { "month" : 9, "day" : 2 }, "NumberOfReviews" : 4482 }
+{ "_id" : { "month" : 9, "day" : 3 }, "NumberOfReviews" : 4114 }
+{ "_id" : { "month" : 9, "day" : 4 }, "NumberOfReviews" : 4189 }
+{ "_id" : { "month" : 9, "day" : 5 }, "NumberOfReviews" : 4523 }
+{ "_id" : { "month" : 9, "day" : 6 }, "NumberOfReviews" : 4702 }
+{ "_id" : { "month" : 9, "day" : 7 }, "NumberOfReviews" : 4715 }
+{ "_id" : { "month" : 9, "day" : 8 }, "NumberOfReviews" : 4526 }
+{ "_id" : { "month" : 9, "day" : 9 }, "NumberOfReviews" : 4021 }
+{ "_id" : { "month" : 9, "day" : 10 }, "NumberOfReviews" : 4156 }
+{ "_id" : { "month" : 9, "day" : 11 }, "NumberOfReviews" : 4112 }
+{ "_id" : { "month" : 9, "day" : 12 }, "NumberOfReviews" : 7875 }
+{ "_id" : { "month" : 9, "day" : 13 }, "NumberOfReviews" : 5312 }
+{ "_id" : { "month" : 9, "day" : 14 }, "NumberOfReviews" : 4604 }
+{ "_id" : { "month" : 9, "day" : 15 }, "NumberOfReviews" : 5198 }
+{ "_id" : { "month" : 9, "day" : 16 }, "NumberOfReviews" : 4243 }
+{ "_id" : { "month" : 9, "day" : 17 }, "NumberOfReviews" : 4251 }
+{ "_id" : { "month" : 9, "day" : 18 }, "NumberOfReviews" : 4395 }
+{ "_id" : { "month" : 9, "day" : 19 }, "NumberOfReviews" : 4553 }
+{ "_id" : { "month" : 9, "day" : 20 }, "NumberOfReviews" : 4994 }
+{ "_id" : { "month" : 9, "day" : 21 }, "NumberOfReviews" : 4625 }
+{ "_id" : { "month" : 9, "day" : 22 }, "NumberOfReviews" : 4184 }
+{ "_id" : { "month" : 9, "day" : 23 }, "NumberOfReviews" : 4907 }
+{ "_id" : { "month" : 9, "day" : 24 }, "NumberOfReviews" : 4154 }
+{ "_id" : { "month" : 9, "day" : 25 }, "NumberOfReviews" : 4763 }
+{ "_id" : { "month" : 9, "day" : 26 }, "NumberOfReviews" : 4947 }
+{ "_id" : { "month" : 9, "day" : 27 }, "NumberOfReviews" : 4531 }
+{ "_id" : { "month" : 9, "day" : 28 }, "NumberOfReviews" : 4712 }
+{ "_id" : { "month" : 9, "day" : 29 }, "NumberOfReviews" : 4603 }
+{ "_id" : { "month" : 9, "day" : 30 }, "NumberOfReviews" : 4260 }
+{ "_id" : { "month" : 10, "day" : 1 }, "NumberOfReviews" : 3867 }
+{ "_id" : { "month" : 10, "day" : 2 }, "NumberOfReviews" : 4367 }
+{ "_id" : { "month" : 10, "day" : 3 }, "NumberOfReviews" : 4654 }
+{ "_id" : { "month" : 10, "day" : 4 }, "NumberOfReviews" : 4876 }
+{ "_id" : { "month" : 10, "day" : 5 }, "NumberOfReviews" : 4669 }
+{ "_id" : { "month" : 10, "day" : 6 }, "NumberOfReviews" : 4437 }
+{ "_id" : { "month" : 10, "day" : 7 }, "NumberOfReviews" : 5151 }
+{ "_id" : { "month" : 10, "day" : 8 }, "NumberOfReviews" : 7468 }
+{ "_id" : { "month" : 10, "day" : 9 }, "NumberOfReviews" : 5355 }
+{ "_id" : { "month" : 10, "day" : 10 }, "NumberOfReviews" : 5162 }
+{ "_id" : { "month" : 10, "day" : 11 }, "NumberOfReviews" : 5378 }
+{ "_id" : { "month" : 10, "day" : 12 }, "NumberOfReviews" : 6182 }
+{ "_id" : { "month" : 10, "day" : 13 }, "NumberOfReviews" : 5570 }
+{ "_id" : { "month" : 10, "day" : 14 }, "NumberOfReviews" : 4844 }
+{ "_id" : { "month" : 10, "day" : 15 }, "NumberOfReviews" : 4468 }
+{ "_id" : { "month" : 10, "day" : 16 }, "NumberOfReviews" : 4464 }
+{ "_id" : { "month" : 10, "day" : 17 }, "NumberOfReviews" : 4798 }
+{ "_id" : { "month" : 10, "day" : 18 }, "NumberOfReviews" : 5135 }
+{ "_id" : { "month" : 10, "day" : 19 }, "NumberOfReviews" : 4702 }
+{ "_id" : { "month" : 10, "day" : 20 }, "NumberOfReviews" : 4757 }
+{ "_id" : { "month" : 10, "day" : 21 }, "NumberOfReviews" : 4505 }
+{ "_id" : { "month" : 10, "day" : 22 }, "NumberOfReviews" : 4389 }
+{ "_id" : { "month" : 10, "day" : 23 }, "NumberOfReviews" : 4500 }
+{ "_id" : { "month" : 10, "day" : 24 }, "NumberOfReviews" : 5058 }
+{ "_id" : { "month" : 10, "day" : 25 }, "NumberOfReviews" : 5198 }
+{ "_id" : { "month" : 10, "day" : 26 }, "NumberOfReviews" : 5121 }
+{ "_id" : { "month" : 10, "day" : 27 }, "NumberOfReviews" : 4903 }
+{ "_id" : { "month" : 10, "day" : 28 }, "NumberOfReviews" : 4473 }
+{ "_id" : { "month" : 10, "day" : 29 }, "NumberOfReviews" : 4247 }
+{ "_id" : { "month" : 10, "day" : 30 }, "NumberOfReviews" : 4380 }
+{ "_id" : { "month" : 10, "day" : 31 }, "NumberOfReviews" : 6516 }
+{ "_id" : { "month" : 11, "day" : 1 }, "NumberOfReviews" : 5067 }
+{ "_id" : { "month" : 11, "day" : 2 }, "NumberOfReviews" : 4592 }
+{ "_id" : { "month" : 11, "day" : 3 }, "NumberOfReviews" : 4421 }
+{ "_id" : { "month" : 11, "day" : 4 }, "NumberOfReviews" : 4306 }
+{ "_id" : { "month" : 11, "day" : 5 }, "NumberOfReviews" : 3945 }
+{ "_id" : { "month" : 11, "day" : 6 }, "NumberOfReviews" : 4086 }
+{ "_id" : { "month" : 11, "day" : 7 }, "NumberOfReviews" : 4820 }
+{ "_id" : { "month" : 11, "day" : 8 }, "NumberOfReviews" : 4536 }
+{ "_id" : { "month" : 11, "day" : 9 }, "NumberOfReviews" : 4623 }
+{ "_id" : { "month" : 11, "day" : 10 }, "NumberOfReviews" : 4434 }
+{ "_id" : { "month" : 11, "day" : 11 }, "NumberOfReviews" : 4512 }
+{ "_id" : { "month" : 11, "day" : 12 }, "NumberOfReviews" : 3950 }
+{ "_id" : { "month" : 11, "day" : 13 }, "NumberOfReviews" : 4457 }
+{ "_id" : { "month" : 11, "day" : 14 }, "NumberOfReviews" : 4897 }
+{ "_id" : { "month" : 11, "day" : 15 }, "NumberOfReviews" : 4537 }
+{ "_id" : { "month" : 11, "day" : 16 }, "NumberOfReviews" : 4378 }
+{ "_id" : { "month" : 11, "day" : 17 }, "NumberOfReviews" : 4418 }
+{ "_id" : { "month" : 11, "day" : 18 }, "NumberOfReviews" : 4386 }
+{ "_id" : { "month" : 11, "day" : 19 }, "NumberOfReviews" : 4048 }
+{ "_id" : { "month" : 11, "day" : 20 }, "NumberOfReviews" : 4138 }
+{ "_id" : { "month" : 11, "day" : 21 }, "NumberOfReviews" : 4576 }
+{ "_id" : { "month" : 11, "day" : 22 }, "NumberOfReviews" : 4098 }
+{ "_id" : { "month" : 11, "day" : 23 }, "NumberOfReviews" : 4011 }
+{ "_id" : { "month" : 11, "day" : 24 }, "NumberOfReviews" : 3412 }
+{ "_id" : { "month" : 11, "day" : 25 }, "NumberOfReviews" : 3404 }
+{ "_id" : { "month" : 11, "day" : 26 }, "NumberOfReviews" : 3436 }
+{ "_id" : { "month" : 11, "day" : 27 }, "NumberOfReviews" : 3793 }
+{ "_id" : { "month" : 11, "day" : 28 }, "NumberOfReviews" : 5656 }
+{ "_id" : { "month" : 11, "day" : 29 }, "NumberOfReviews" : 4674 }
+{ "_id" : { "month" : 11, "day" : 30 }, "NumberOfReviews" : 4390 }
+{ "_id" : { "month" : 12, "day" : 1 }, "NumberOfReviews" : 3806 }
+{ "_id" : { "month" : 12, "day" : 2 }, "NumberOfReviews" : 3691 }
+{ "_id" : { "month" : 12, "day" : 3 }, "NumberOfReviews" : 3295 }
+{ "_id" : { "month" : 12, "day" : 4 }, "NumberOfReviews" : 3568 }
+{ "_id" : { "month" : 12, "day" : 5 }, "NumberOfReviews" : 3643 }
+{ "_id" : { "month" : 12, "day" : 6 }, "NumberOfReviews" : 3629 }
+{ "_id" : { "month" : 12, "day" : 7 }, "NumberOfReviews" : 3619 }
+{ "_id" : { "month" : 12, "day" : 8 }, "NumberOfReviews" : 3527 }
+{ "_id" : { "month" : 12, "day" : 9 }, "NumberOfReviews" : 3865 }
+{ "_id" : { "month" : 12, "day" : 10 }, "NumberOfReviews" : 3306 }
+{ "_id" : { "month" : 12, "day" : 11 }, "NumberOfReviews" : 3564 }
+{ "_id" : { "month" : 12, "day" : 12 }, "NumberOfReviews" : 3776 }
+{ "_id" : { "month" : 12, "day" : 13 }, "NumberOfReviews" : 3812 }
+{ "_id" : { "month" : 12, "day" : 14 }, "NumberOfReviews" : 3476 }
+{ "_id" : { "month" : 12, "day" : 15 }, "NumberOfReviews" : 3565 }
+{ "_id" : { "month" : 12, "day" : 16 }, "NumberOfReviews" : 3049 }
+{ "_id" : { "month" : 12, "day" : 17 }, "NumberOfReviews" : 2950 }
+{ "_id" : { "month" : 12, "day" : 18 }, "NumberOfReviews" : 3029 }
+{ "_id" : { "month" : 12, "day" : 19 }, "NumberOfReviews" : 3476 }
+{ "_id" : { "month" : 12, "day" : 20 }, "NumberOfReviews" : 3227 }
+{ "_id" : { "month" : 12, "day" : 21 }, "NumberOfReviews" : 3080 }
+{ "_id" : { "month" : 12, "day" : 22 }, "NumberOfReviews" : 3686 }
+{ "_id" : { "month" : 12, "day" : 23 }, "NumberOfReviews" : 2920 }
+{ "_id" : { "month" : 12, "day" : 24 }, "NumberOfReviews" : 1972 }
+{ "_id" : { "month" : 12, "day" : 25 }, "NumberOfReviews" : 1891 }
+{ "_id" : { "month" : 12, "day" : 26 }, "NumberOfReviews" : 2808 }
+{ "_id" : { "month" : 12, "day" : 27 }, "NumberOfReviews" : 3787 }
+{ "_id" : { "month" : 12, "day" : 28 }, "NumberOfReviews" : 4374 }
+{ "_id" : { "month" : 12, "day" : 29 }, "NumberOfReviews" : 4900 }
+{ "_id" : { "month" : 12, "day" : 30 }, "NumberOfReviews" : 4286 }
+{ "_id" : { "month" : 12, "day" : 31 }, "NumberOfReviews" : 3671 }
+==============================================================================================================
+(6)
+db.reviews.aggregate([
+    {
+        $unwind: "$Reviews"
+    }, 
+    {
+        $group: {
+            _id: { author: "$Reviews.Author" },
+            NumberOfReviews: {$sum: 1}           
+        }
+    },
+    {
+        $sort: {
+            NumberOfReviews: -1
+        }
+    }
+], {allowDiskUse: true}
+)
+
+*output:
+{ "_id" : { "author" : "A TripAdvisor Member" }, "NumberOfReviews" : 75503 }
+{ "_id" : { "author" : "lass=" }, "NumberOfReviews" : 17432 }
+{ "_id" : { "author" : "Posted by an Accorhotels.com traveler" }, "NumberOfReviews" : 4656 }
+{ "_id" : { "author" : "Posted by an Easytobook.com traveler" }, "NumberOfReviews" : 262 }
+{ "_id" : { "author" : "Posted by a hotelsgrandparis.com traveler" }, "NumberOfReviews" : 178 }
+{ "_id" : { "author" : "David S" }, "NumberOfReviews" : 97 }
+{ "_id" : { "author" : "David B" }, "NumberOfReviews" : 90 }
+{ "_id" : { "author" : "David M" }, "NumberOfReviews" : 89 }
+{ "_id" : { "author" : "John C" }, "NumberOfReviews" : 85 }
+{ "_id" : { "author" : "John S" }, "NumberOfReviews" : 84 }
+{ "_id" : { "author" : "David H" }, "NumberOfReviews" : 80 }
+{ "_id" : { "author" : "John B" }, "NumberOfReviews" : 74 }
+{ "_id" : { "author" : "ITA_And_RE_a" }, "NumberOfReviews" : 69 }
+{ "_id" : { "author" : "John M" }, "NumberOfReviews" : 68 }
+{ "_id" : { "author" : "John R" }, "NumberOfReviews" : 66 }
+{ "_id" : { "author" : "David C" }, "NumberOfReviews" : 66 }
+{ "_id" : { "author" : "Pawel_EPWR" }, "NumberOfReviews" : 65 }
+{ "_id" : { "author" : "Paul B" }, "NumberOfReviews" : 64 }
+{ "_id" : { "author" : "Chris B" }, "NumberOfReviews" : 63 }
+{ "_id" : { "author" : "Paul M" }, "NumberOfReviews" : 60 }
+{ "_id" : { "author" : "Mike S" }, "NumberOfReviews" : 60 }
+{ "_id" : { "author" : "John L" }, "NumberOfReviews" : 60 }
+{ "_id" : { "author" : "John W" }, "NumberOfReviews" : 59 }
+{ "_id" : { "author" : "John H" }, "NumberOfReviews" : 59 }
+{ "_id" : { "author" : "David L" }, "NumberOfReviews" : 58 }
+{ "_id" : { "author" : "Mike M" }, "NumberOfReviews" : 58 }
+{ "_id" : { "author" : "John D" }, "NumberOfReviews" : 58 }
+{ "_id" : { "author" : "Michael S" }, "NumberOfReviews" : 57 }
+{ "_id" : { "author" : "Posted by a La Quinta traveler" }, "NumberOfReviews" : 56 }
+{ "_id" : { "author" : "Mark S" }, "NumberOfReviews" : 55 }
+{ "_id" : { "author" : "David W" }, "NumberOfReviews" : 55 }
+{ "_id" : { "author" : "Peter S" }, "NumberOfReviews" : 54 }
+{ "_id" : { "author" : "Robert C" }, "NumberOfReviews" : 53 }
+{ "_id" : { "author" : "Michael B" }, "NumberOfReviews" : 53 }
+{ "_id" : { "author" : "shario" }, "NumberOfReviews" : 52 }
+{ "_id" : { "author" : "Msk6261" }, "NumberOfReviews" : 52 }
+{ "_id" : { "author" : "laurengucsb" }, "NumberOfReviews" : 51 }
+{ "_id" : { "author" : "John K" }, "NumberOfReviews" : 51 }
+{ "_id" : { "author" : "Chris H" }, "NumberOfReviews" : 50 }
+{ "_id" : { "author" : "drc225" }, "NumberOfReviews" : 50 }
+{ "_id" : { "author" : "Canadianknowitall" }, "NumberOfReviews" : 49 }
+{ "_id" : { "author" : "NoneNamedYet" }, "NumberOfReviews" : 49 }
+{ "_id" : { "author" : "brmusicman" }, "NumberOfReviews" : 49 }
+{ "_id" : { "author" : "Michael C" }, "NumberOfReviews" : 49 }
+{ "_id" : { "author" : "washbrol" }, "NumberOfReviews" : 48 }
+{ "_id" : { "author" : "John G" }, "NumberOfReviews" : 48 }
+{ "_id" : { "author" : "Mark B" }, "NumberOfReviews" : 48 }
+{ "_id" : { "author" : "2Midwest" }, "NumberOfReviews" : 48 }
+{ "_id" : { "author" : "David P" }, "NumberOfReviews" : 47 }
+{ "_id" : { "author" : "David D" }, "NumberOfReviews" : 46 }
+{ "_id" : { "author" : "SecretAgentReview" }, "NumberOfReviews" : 46 }
+{ "_id" : { "author" : "Brian_NVA" }, "NumberOfReviews" : 46 }
+{ "_id" : { "author" : "wanderer" }, "NumberOfReviews" : 46 }
+{ "_id" : { "author" : "Michael M" }, "NumberOfReviews" : 46 }
+{ "_id" : { "author" : "af847" }, "NumberOfReviews" : 46 }
+{ "_id" : { "author" : "James B" }, "NumberOfReviews" : 45 }
+{ "_id" : { "author" : "Richard B" }, "NumberOfReviews" : 45 }
+{ "_id" : { "author" : "Robert S" }, "NumberOfReviews" : 44 }
+{ "_id" : { "author" : "BforBoy" }, "NumberOfReviews" : 44 }
+{ "_id" : { "author" : "tobeginwith" }, "NumberOfReviews" : 44 }
+{ "_id" : { "author" : "roadwarrior30" }, "NumberOfReviews" : 44 }
+{ "_id" : { "author" : "Doraemon79" }, "NumberOfReviews" : 43 }
+{ "_id" : { "author" : "Boeing767" }, "NumberOfReviews" : 43 }
+{ "_id" : { "author" : "Mary M" }, "NumberOfReviews" : 43 }
+{ "_id" : { "author" : "Paul C" }, "NumberOfReviews" : 43 }
+{ "_id" : { "author" : "Mike H" }, "NumberOfReviews" : 43 }
+{ "_id" : { "author" : "DoesNotGetOutMuch" }, "NumberOfReviews" : 43 }
+{ "_id" : { "author" : "Staidthere" }, "NumberOfReviews" : 43 }
+{ "_id" : { "author" : "John P" }, "NumberOfReviews" : 42 }
+{ "_id" : { "author" : "Lisa M" }, "NumberOfReviews" : 42 }
+{ "_id" : { "author" : "Peter M" }, "NumberOfReviews" : 42 }
+{ "_id" : { "author" : "Michael L" }, "NumberOfReviews" : 41 }
+{ "_id" : { "author" : "Posted by a cheaprooms.com traveler" }, "NumberOfReviews" : 41 }
+{ "_id" : { "author" : "Steve S" }, "NumberOfReviews" : 41 }
+{ "_id" : { "author" : "Paul H" }, "NumberOfReviews" : 41 }
+{ "_id" : { "author" : "Jennifer S" }, "NumberOfReviews" : 41 }
+{ "_id" : { "author" : "MonkeyGreen" }, "NumberOfReviews" : 41 }
+{ "_id" : { "author" : "Mike D" }, "NumberOfReviews" : 41 }
+{ "_id" : { "author" : "David G" }, "NumberOfReviews" : 41 }
+{ "_id" : { "author" : "Chris S" }, "NumberOfReviews" : 41 }
+{ "_id" : { "author" : "Sarah H" }, "NumberOfReviews" : 40 }
+{ "_id" : { "author" : "scottca075" }, "NumberOfReviews" : 40 }
+{ "_id" : { "author" : "David R" }, "NumberOfReviews" : 40 }
+{ "_id" : { "author" : "cinncitraveler" }, "NumberOfReviews" : 40 }
+{ "_id" : { "author" : "James M" }, "NumberOfReviews" : 40 }
+{ "_id" : { "author" : "Lisa B" }, "NumberOfReviews" : 40 }
+{ "_id" : { "author" : "herculepoirot" }, "NumberOfReviews" : 40 }
+{ "_id" : { "author" : "Karen B" }, "NumberOfReviews" : 40 }
+{ "_id" : { "author" : "karensolihull" }, "NumberOfReviews" : 39 }
+{ "_id" : { "author" : "terravisum" }, "NumberOfReviews" : 39 }
+{ "_id" : { "author" : "Leesw8" }, "NumberOfReviews" : 39 }
+{ "_id" : { "author" : "Jim M" }, "NumberOfReviews" : 39 }
+{ "_id" : { "author" : "Kevin M" }, "NumberOfReviews" : 38 }
+{ "_id" : { "author" : "Mark C" }, "NumberOfReviews" : 38 }
+{ "_id" : { "author" : "Solange72" }, "NumberOfReviews" : 38 }
+{ "_id" : { "author" : "J M" }, "NumberOfReviews" : 38 }
+{ "_id" : { "author" : "Lael_Lael" }, "NumberOfReviews" : 38 }
+{ "_id" : { "author" : "welltraveledA" }, "NumberOfReviews" : 37 }
+{ "_id" : { "author" : "Brian B" }, "NumberOfReviews" : 37 }
+{ "_id" : { "author" : "Belasaria" }, "NumberOfReviews" : 37 }
+... //etc
+==============================================================================================================
+(7)
+First we find the average overall rating of Desert Rose Resort:
+db.reviews.aggregate([
+    {
+        $unwind: "$Reviews"
+    },
+    {
+        $match: {
+            "_id": ObjectId("5a1d7c469a807fe556269c76") 
+        }
+    },   
+    {
+        $group: {
+            _id: "$HotelInfo.Name",
+            NumberOfFiveOveralls: {$avg: "$Reviews.Ratings.Overall"}           
+        }
+    },
+    {
+        $sort: {
+            NumberOfFiveOveralls: -1
+        }
+    }
+]
+)
+
+*output:
+{ "_id" : "Desert Rose Resort", "NumberOfFiveOveralls" : 4.521974306964165 }
+__________________________
+Then we use the result to compare all hotels:
+db.reviews.aggregate([
+    {
+        $unwind: "$Reviews"
+    },
+    {
+        $group: {
+            _id: "$HotelInfo.Name",
+            AvgOverall: {$avg: "$Reviews.Ratings.Overall"}           
+        }
+    },
+    {
+        $match:{
+            AvgOverall: { $gt: 4.521974306964165 } 
+        }
+    },
+    { 
+        $group: { 
+                _id: null, 
+                TotalHotelsAboveDesertRose: { $sum: 1 } 
+        } 
+    }
+]
+)
+
+*output:
+{ "_id" : null, "TotalHotelsAboveDesertRose" : 620 }
+
+
+==============================================================================================================
+(8)
+Find total authors in each location:
+db.reviews.aggregate([
+    {
+        $unwind: "$Reviews"
+    },
+    {
+        $group: {
+            _id: "$Reviews.AuthorLocation",
+            count: {$sum: 1}            
+        }
+    },
+    {
+        $sort: {
+            count: -1
+        }
+    }
+]
+)
+
+*output:
+{ "_id" : null, "count" : 145117 }
+{ "_id" : "", "count" : 57962 }
+{ "_id" : "London", "count" : 23927 }
+{ "_id" : "London, United Kingdom", "count" : 22038 }
+{ "_id" : "New York City, New York", "count" : 14484 }
+{ "_id" : "Toronto, Canada", "count" : 10309 }
+{ "_id" : "Los Angeles, California", "count" : 9785 }
+{ "_id" : "Chicago, Illinois", "count" : 9690 }
+{ "_id" : "Sydney, Australia", "count" : 9664 }
+{ "_id" : "New York", "count" : 8906 }
+{ "_id" : "UK", "count" : 8770 }
+{ "_id" : "Melbourne, Australia", "count" : 8466 }
+{ "_id" : "Toronto", "count" : 7882 }
+{ "_id" : "California", "count" : 7705 }
+{ "_id" : "Boston, Massachusetts", "count" : 6405 }
+{ "_id" : "San Francisco, California", "count" : 6382 }
+{ "_id" : "Los Angeles", "count" : 6151 }
+{ "_id" : "Vancouver, Canada", "count" : 6035 }
+{ "_id" : "Washington DC, District of Columbia", "count" : 5868 }
+{ "_id" : "Sydney", "count" : 5656 }
+... //etc
+==============================================================================================================
+(9)
+Hotels that have an average overall rating less than 2:
+db.reviews.aggregate([
+    {
+        $unwind: "$Reviews"
+    },
+    {
+        $group: {
+            _id: "$HotelInfo.Name",
+            AvgOverall: {$avg: "$Reviews.Ratings.Overall"}           
+        }
+    },
+    {
+        $match:{
+            AvgOverall: { $lt: 2 } 
+        }
+    },
+    {
+        $sort: {
+            AvgOverall: -1
+        }
+    }
+]
+)
+
+*output:
+{ "_id" : "River Park Hotel & Suites Downtown/Convention Center", "AvgOverall" : 1.9908256880733946 }
+{ "_id" : "Chocolat Hostel", "AvgOverall" : 1.99 }
+{ "_id" : "Rembrandtplein Hotel", "AvgOverall" : 1.9824561403508771 }
+{ "_id" : "Hotel Nizza", "AvgOverall" : 1.9821428571428572 }
+{ "_id" : "Kensington Suite Hotel", "AvgOverall" : 1.9807692307692308 }
+{ "_id" : "New York Inn", "AvgOverall" : 1.975 }
+{ "_id" : "Dam Hotel", "AvgOverall" : 1.9736842105263157 }
+{ "_id" : "Hotel de Lantaerne", "AvgOverall" : 1.9710144927536233 }
+{ "_id" : "Econo Lodge Aeroport", "AvgOverall" : 1.967741935483871 }
+{ "_id" : "Motel 6 Baltimore", "AvgOverall" : 1.9666666666666666 }
+{ "_id" : "Hotel 81 - Chinatown", "AvgOverall" : 1.9666666666666666 }
+{ "_id" : "Woogo Apartments - Times Square", "AvgOverall" : 1.9655172413793103 }
+{ "_id" : "Romanos Hotel", "AvgOverall" : 1.9642857142857142 }
+{ "_id" : "Hotel Damrak", "AvgOverall" : 1.962962962962963 }
+{ "_id" : "Holiday Inn Express Madrid Airport", "AvgOverall" : 1.9625 }
+{ "_id" : "Nite Inn at Universal City", "AvgOverall" : 1.9583333333333333 }
+{ "_id" : "Amaryl City Hotel", "AvgOverall" : 1.9545454545454546 }
+{ "_id" : "Colliers Hotel", "AvgOverall" : 1.9545454545454546 }
+{ "_id" : "Bastion Amsterdam/Centrum Zuidwest", "AvgOverall" : 1.9545454545454546 }
+{ "_id" : "Hotel Urbis", "AvgOverall" : 1.9523809523809523 }
+...//etc
+
+==============================================================================================================
+(10)
+Hotels that have bad service (average rating of service less than or equal to 2):
+db.reviews.aggregate([
+    {
+        $unwind: "$Reviews"
+    },
+    {
+        $group: {
+            _id: "$HotelInfo.Name",
+            Service: {$avg: "$Reviews.Ratings.Service"}           
+        }
+    },
+    {
+        $match:{
+            Service: { $lte: 2 } 
+        }
+    },
+    {
+        $sort: {
+            Service: -1
+        }
+    }
+]
+)
+
+*output:
+{ "_id" : "Hotel-Pension Gribnitz", "Service" : 2 }
+{ "_id" : "Comfort Inn & Suites German Church Road", "Service" : 2 }
+{ "_id" : "Hotel Croydon", "Service" : 2 }
+{ "_id" : "Casale della Certosa", "Service" : 2 }
+{ "_id" : "Pension Zimmer des Westens", "Service" : 2 }
+{ "_id" : "Hotel Parkidyll", "Service" : 2 }
+{ "_id" : "Costa Dorada Beach Resort", "Service" : 2 }
+{ "_id" : "Dei Mille", "Service" : 2 }
+{ "_id" : "Lella", "Service" : 2 }
+{ "_id" : "Grand Hilarium Hotel", "Service" : 2 }
+{ "_id" : "Hotel Capital Inn", "Service" : 2 }
+{ "_id" : "Residence St. Joannes", "Service" : 2 }
+{ "_id" : "Apartcity-Serviced Apartments Hotel", "Service" : 2 }
+{ "_id" : "Aristotele", "Service" : 2 }
+{ "_id" : "Amico Hotel", "Service" : 2 }
+{ "_id" : "Berr Hotel", "Service" : 2 }
+{ "_id" : "Lion Hotel", "Service" : 2 }
+{ "_id" : "Hotel El Salvador", "Service" : 2 }
+{ "_id" : "Airport Palace Hotel", "Service" : 2 }
+{ "_id" : "Kris Cazadora Hotel", "Service" : 2 }
+...//etc
+
+==============================================================================================================
+(11)
+Comparing the total reviews during August to total reviews during December:
+August:
+
+db.reviews.aggregate([
+  {
+    $unwind: "$Reviews"
+  },
+  {
+    $project: {
+        "HotelInfo.Name": 1, month: {$month: "$Reviews.Date"}
+    }  
+  },
+  {
+    $match: {
+        $or: [ {month: 8}]
+    }
+  },
+  {
+    $group:{
+        _id: null,
+        count: { $sum: 1 }
+    }
+  }
+])
+
+*output:
+{ "_id" : null, "count" : 152877 }
+_________________________________________
+December:
+db.reviews.aggregate([
+  {
+    $unwind: "$Reviews"
+  },
+  {
+    $project: {
+        "HotelInfo.Name": 1, month: {$month: "$Reviews.Date"}
+    }  
+  },
+  {
+    $match: {
+        $or: [ {month: 12}]
+    }
+  },
+  {
+    $group:{
+        _id: null,
+        count: { $sum: 1 }
+    }
+  }
+])
+
+*output:
+{ "_id" : null, "count" : 107248 }
+
+
+[*]Conclusion: more reviews are posted during the summer (152877) compared to winter (107248), because people have more vacations in the summer.
+==============================================================================================================
